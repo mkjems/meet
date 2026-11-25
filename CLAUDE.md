@@ -2,7 +2,9 @@
 
 Video calls for up to four people at `meet.mkjems.dk`: audio, video, screen sharing and chat. Media goes browser
 to browser (WebRTC, a full mesh); the server only introduces people and passes setup messages and chat.
-Decisions, deploy steps and what's left are in [docs/Plan.md](docs/Plan.md); keep it up to date.
+Decisions, deploy steps and what's left are in [docs/Plan.md](docs/Plan.md); keep it up to date (tick steps, add
+short dated notes under them, refresh **Next session** at the end of a session).
+**New session: read the plan's [Next session](docs/Plan.md#next-session) section first.**
 
 ## Working on the project
 
@@ -30,4 +32,4 @@ Decisions, deploy steps and what's left are in [docs/Plan.md](docs/Plan.md); kee
 ## Rules of thumb
 
 - Keep the server dumb: no media through it, nothing on disk.
-- Commit locally; ask before pushing or creating the GitHub repository.
+- Commit locally; ask before pushing. **Every push to `main` deploys to meet.mkjems.dk** (`.github/workflows/deploy.yml`).
