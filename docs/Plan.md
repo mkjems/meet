@@ -33,6 +33,9 @@ by real people yet**: that is the next step (step 5 below, with the user).
   (`unreadBadge`), not looked up by id.
 - Headless Chromium shares a "screen" with `--auto-accept-this-tab-capture`; the flags are in `tests/browser.mjs`.
 - Deploy and hosting follow `../infrastructure/docs/deploy-new-app.md` exactly, like Pool (port 8088).
+- The link preview (`og:image`) is `public/og.jpg`, 1200 × 628, scaled down from `artwork/Meet.png` (the
+  original stays out of git): `sips -s format jpeg -s formatOptions 85 -z 628 1200 artwork/Meet.png --out public/og.jpg`.
+  Added 25 November.
 
 ## Decisions
 
