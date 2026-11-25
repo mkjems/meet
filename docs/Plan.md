@@ -25,18 +25,19 @@ Started 25 November 2026, after voice chat in Pool worked well browser to browse
 3. Create the GitHub repository `mkjems/meet`, add the secrets `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY` (as Pool).
 4. On the VPS: copy `compose.yaml` to `/opt/meet/compose.yaml`.
 5. Push to `main`; the workflow tests, builds, pushes the image and deploys.
+6. Test out audio and video chat
 
 ## Steps
 
 - [x] 1. Signaling server with rooms of 4, rejoin, chat, state; tests. (25 November)
 - [x] 2. Peer connections (mesh, fixed transceivers, retries), local media, screen sharing. (25 November)
 - [x] 3. UI: home, lobby (preview, devices, name, who's in), call (grid/stage, pin, full screen, speaking ring,
-  chat, invite link, device settings), ended screen; phone layout. (25 November)
+     chat, invite link, device settings), ended screen; phone layout. (25 November)
 - [x] 4. Browser tests with fake devices: 8 scenarios. (25 November)
 - [ ] 5. Deploy (above), then try it for real: two or three people on different networks, a phone on mobile data.
 - [ ] 6. TURN, if step 5 shows people who can't connect ("Couldn't connect" on a tile). coturn in Docker on the
-  VPS (needs UDP 3478 and a port range open in the firewall), or a hosted one; the server already hands out
-  credentials when `TURN_URLS` and `TURN_SECRET` are set.
+     VPS (needs UDP 3478 and a port range open in the firewall), or a hosted one; the server already hands out
+     credentials when `TURN_URLS` and `TURN_SECRET` are set.
 
 ## Ideas, not done
 
