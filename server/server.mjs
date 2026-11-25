@@ -16,7 +16,7 @@ import { attachRooms } from "./rooms.mjs";
 const TYPES = {
   ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".json": "application/json",
   ".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".ico": "image/x-icon", ".svg": "image/svg+xml",
-  ".txt": "text/plain; charset=utf-8", ".webmanifest": "application/manifest+json",
+  ".txt": "text/plain; charset=utf-8", ".xml": "application/xml", ".webmanifest": "application/manifest+json",
 };
 
 /** The ICE servers browsers use to find a way to each other. */
@@ -53,6 +53,8 @@ export function start({ port = 8080, site = fileURLToPath(new URL("../dist/", im
       res.writeHead(200, {
         "content-type": type, "content-length": s.size, "cache-control": cache,
         "x-content-type-options": "nosniff", "referrer-policy": "no-referrer",
+        // Only the home page belongs in search results; meeting links (/abcd-efgh) are private.
+        ...(type.startsWith("text/html") && url.pathname !== "/" ? { "x-robots-tag": "noindex" } : {}),
       });
       res.end(req.method === "HEAD" ? undefined : await readFile(file));
     } catch {

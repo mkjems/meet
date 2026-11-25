@@ -36,6 +36,11 @@ by real people yet**: that is the next step (step 5 below, with the user).
 - The link preview (`og:image`) is `public/og.jpg`, 1200 × 628, scaled down from `artwork/Meet.png` (the
   original stays out of git): `sips -s format jpeg -s formatOptions 85 -z 628 1200 artwork/Meet.png --out public/og.jpg`.
   Added 25 November.
+- Search (25 November): only the home page is indexed. Meeting links are private, so the server sends
+  `X-Robots-Tag: noindex` for every page except `/` (there used to be a site-wide `noindex` meta tag). The home
+  page has a canonical URL, WebApplication JSON-LD, `robots.txt` and `sitemap.xml` in `public/`, and a few lines
+  of visible text under the card. After the next deploy: submit `https://meet.mkjems.dk/sitemap.xml` in Google
+  Search Console (and Bing Webmaster Tools).
 
 ## Decisions
 

@@ -79,7 +79,7 @@ function route() {
   const code = codeFrom(location.pathname);
   if (inCall) leave();
   if (code) enterLobby(code);
-  else { closeSignal(); stopPreview(); show("home"); document.title = "Meet: video calls with friends, no sign-up"; }
+  else { closeSignal(); stopPreview(); show("home"); document.title = "Meet – Free video calls in your browser, no sign-up"; }
 }
 window.addEventListener("popstate", route);
 

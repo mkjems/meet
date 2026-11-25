@@ -66,6 +66,12 @@ select { appearance: none; background-image: linear-gradient(45deg, transparent 
 .mark::after { content: ""; position: absolute; inset: 9px 7px 9px 7px; border-radius: 4px; background: var(--panel); clip-path: polygon(0 0, 70% 0, 70% 30%, 100% 10%, 100% 90%, 70% 70%, 70% 100%, 0 100%); }
 .or { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 13px; }
 .or::before, .or::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.home { width: min(420px, 100%); display: flex; flex-direction: column; gap: 18px; }
+.facts { margin: 0; padding: 0 8px; list-style: none; display: flex; flex-direction: column; gap: 8px; color: var(--muted); font-size: 14px; }
+.facts li { padding-left: 16px; position: relative; }
+.facts li::before { content: ""; position: absolute; left: 0; top: .6em; width: 6px; height: 6px; border-radius: 50%; background: var(--speak); }
+.made { margin: 0; padding: 0 8px; color: var(--muted); font-size: 13px; }
+.made a { color: inherit; }
 
 /* Lobby */
 .lobby { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 20px; width: min(1040px, 100%); align-items: center; }
