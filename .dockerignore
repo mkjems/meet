@@ -1,0 +1,8 @@
+node_modules
+dist
+.git
+.github
+.playwright-mcp
+tests/out
+.DS_Store
+.env

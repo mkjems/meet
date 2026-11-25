@@ -1,0 +1,8 @@
+# Copy of /opt/meet/compose.yaml on the VPS.
+services:
+  meet:
+    image: ghcr.io/mkjems/meet:latest
+    ports:
+      - "127.0.0.1:8088:8080"
+    restart: unless-stopped
+    # For TURN later (docs/Plan.md): TURN_URLS and TURN_SECRET, e.g. from an env_file kept only on the VPS.
