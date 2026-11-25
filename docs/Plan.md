@@ -9,12 +9,13 @@ in VS Code. Read this section, then [CLAUDE.md](../CLAUDE.md) for commands and l
 
 **Where it stands.** Built, tested headless, and **live at https://meet.mkjems.dk** (deployed 25 November by the
 workflow; the first run failed only because the repository's VPS secrets weren't set yet). The infrastructure
-repo has the route committed locally (`setup hosting for meet`) but not pushed. The app has **not been tried
-by real people yet**: that is the next step (step 5 below, with the user).
+repo has the route committed locally (`setup hosting for meet`) but not pushed. **Tried by real people on
+25 November**: two 2-person calls (one with a phone, one with window sharing and chat) worked with no flaws
+found. The user is now using it day to day.
 
 **What to do next, in order.**
-1. Help the user test it for real (step 5): two or three people on different networks, at least one phone on
-   mobile data, an iPhone (Safari), and screen sharing from a Mac. Things to watch for and ask about:
+1. Ask the user what came up in everyday use. Then fill the gaps in step 5: three or four people at once,
+   a phone on mobile data, an iPhone (Safari). Things to watch for and ask about:
    - Tiles stuck on "Connecting…" or "Couldn't connect": a network that needs TURN (step 6).
    - Safari: the camera preview, unmuting after a mute, switching camera, video playing without a tap.
      None of it has run in Safari or WebKit yet; `npm run browser` is Chromium only.
@@ -76,6 +77,9 @@ by real people yet**: that is the next step (step 5 below, with the user).
 - [x] 4. Browser tests with fake devices: 8 scenarios. (25 November)
 - [ ] 5. Deploy (above), then try it for real: two or three people on different networks, a phone on mobile data.
   - 25 November: deployed, https://meet.mkjems.dk answers. Not yet tried by people.
+  - 25 November: two real calls, two people each, both worked with no flaws found: a short one with the other
+    person on a phone, and a long one with window sharing and chat. Still untried: three or four people, Safari
+    on an iPhone, a phone on mobile data. The user will keep using it day to day and report what turns up.
 - [ ] 6. TURN, if step 5 shows people who can't connect ("Couldn't connect" on a tile). coturn in Docker on the
      VPS (needs UDP 3478 and a port range open in the firewall), or a hosted one; the server already hands out
      credentials when `TURN_URLS` and `TURN_SECRET` are set.
