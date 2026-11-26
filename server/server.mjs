@@ -30,6 +30,33 @@ export function iceServers(env = process.env, now = Date.now()) {
   return list;
 }
 
+const CODE_RE = /^[a-z0-9]{3,8}(-[a-z0-9]{3,8}){0,3}$/; // as in src/main.ts
+
+/** The meeting code in a page's path ("/abcd-efgh"), or null for the home page and anything else. */
+export function codeIn(pathname) {
+  const s = pathname.replace(/^\/+|\/+$/g, "").toLowerCase();
+  return CODE_RE.test(s) ? s : null;
+}
+
+/**
+ * index.html as a meeting link's page: its own title, address and picture, so a link preview (iMessage, Slack...)
+ * shows an invitation to that meeting rather than the home page. Link previews read og:url (and the canonical
+ * link) as the page's real address, so those must not point at the home page.
+ */
+export function meetingPage(html, code) {
+  const meta = (prop, value) => (s) => s.replace(new RegExp(`(<meta property="${prop}"\\s+content=")[^"]*"`), `$1${value}"`);
+  const edits = [
+    (s) => s.replace(/<title>[^<]*<\/title>/, `<title>Join the call ${code} – Meet</title>`),
+    (s) => s.replace(/\s*<link rel="canonical"[^>]*>/, ""),
+    meta("og:title", `Join the call · ${code}`),
+    meta("og:description", "You’re invited to a video call on Meet. Open the link to join, no sign-up."),
+    (s) => s.replace(/(<meta property="og:url" content="[^"]*\/)"/, `$1${code}"`),
+    (s) => s.replace(/(<meta property="og:image" content="[^"]*\/)og\.jpg"/, `$1og-join.jpg"`),
+    meta("og:image:alt", "Meet: a video call with four smiling people in a grid, and the words: You’re invited to a call. Tap to join."),
+  ];
+  return edits.reduce((s, edit) => edit(s), html);
+}
+
 export function start({ port = 8080, site = fileURLToPath(new URL("../dist/", import.meta.url)) } = {}) {
   const root = resolve(site);
   const server = createServer(async (req, res) => {
@@ -50,13 +77,15 @@ export function start({ port = 8080, site = fileURLToPath(new URL("../dist/", im
       const type = TYPES[extname(file)] || "application/octet-stream";
       // Built assets have hashed names and never change; the page itself must always be fresh.
       const cache = type.startsWith("text/html") ? "no-cache" : path.startsWith("/assets/") ? "public, max-age=31536000, immutable" : "public, max-age=3600";
+      const code = path === "/index.html" ? codeIn(url.pathname) : null;
+      const body = code ? Buffer.from(meetingPage(await readFile(file, "utf8"), code)) : await readFile(file);
       res.writeHead(200, {
-        "content-type": type, "content-length": s.size, "cache-control": cache,
+        "content-type": type, "content-length": body.length, "cache-control": cache,
         "x-content-type-options": "nosniff", "referrer-policy": "no-referrer",
         // Only the home page belongs in search results; meeting links (/abcd-efgh) are private.
         ...(type.startsWith("text/html") && url.pathname !== "/" ? { "x-robots-tag": "noindex" } : {}),
       });
-      res.end(req.method === "HEAD" ? undefined : await readFile(file));
+      res.end(req.method === "HEAD" ? undefined : body);
     } catch {
       res.writeHead(404, { "content-type": "text/plain" }).end("Not found");
     }

@@ -37,6 +37,12 @@ found. The user is now using it day to day.
 - The link preview (`og:image`) is `public/og.jpg`, 1200 × 628, scaled down from `artwork/Meet.png` (the
   original stays out of git): `sips -s format jpeg -s formatOptions 85 -z 628 1200 artwork/Meet.png --out public/og.jpg`.
   Added 25 November.
+- Meeting links get their own preview (26 November): `server.mjs` rewrites `index.html` for `/abcd-efgh` with
+  `og:url` set to the meeting link, title "Join the call · abcd-efgh", picture `public/og-join.jpg`, and no
+  canonical link. Before this, iMessage showed meeting links as the home page because `og:url` and the canonical
+  link both said `/`. Only the production server does this, not `npm run dev`. `og-join.jpg` is made from
+  `og.jpg` by `node scripts/og-join.mjs public/og.jpg public/og-join.jpg`; redo it when `og.jpg` changes.
+  iMessage caches previews, so test with a meeting link that hasn't been pasted before.
 - Search (25 November): only the home page is indexed. Meeting links are private, so the server sends
   `X-Robots-Tag: noindex` for every page except `/` (there used to be a site-wide `noindex` meta tag). The home
   page has a canonical URL, WebApplication JSON-LD, `robots.txt` and `sitemap.xml` in `public/`, and a few lines

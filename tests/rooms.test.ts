@@ -2,8 +2,9 @@
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { WebSocket } from "ws";
+import { readFileSync } from "node:fs";
 // @ts-expect-error: plain JavaScript module
-import { start, iceServers } from "../server/server.mjs";
+import { start, iceServers, codeIn, meetingPage } from "../server/server.mjs";
 
 type Msg = { t: string; [k: string]: any };
 let srv: { port: number; rooms: Map<string, Map<string, unknown>>; close(): Promise<void> };
@@ -130,5 +131,27 @@ describe("ICE servers", () => {
     const list = iceServers({ TURN_URLS: "turn:t.example:3478", TURN_SECRET: "s3cret" }, 1_000_000_000);
     expect(list[1]).toMatchObject({ urls: ["turn:t.example:3478"], username: `${1_000_000 + 43200}:meet` });
     expect(list[1].credential).toMatch(/^[A-Za-z0-9+/]+=*$/);
+  });
+});
+
+describe("Meeting link previews", () => {
+  const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  const tag = (page: string, prop: string) => page.match(new RegExp(`<meta property="${prop}"\\s+content="([^"]*)"`))?.[1];
+
+  it("finds the meeting code in a page's path", () => {
+    expect(codeIn("/abcd-efgh")).toBe("abcd-efgh");
+    expect(codeIn("/ABCD-efgh/")).toBe("abcd-efgh");
+    expect(codeIn("/")).toBeNull();
+    expect(codeIn("/a/b")).toBeNull();
+  });
+  it("gives a meeting link its own address, title and picture", () => {
+    const page = meetingPage(html, "abcd-efgh");
+    expect(tag(page, "og:url")).toBe("https://meet.mkjems.dk/abcd-efgh");
+    expect(tag(page, "og:title")).toBe("Join the call · abcd-efgh");
+    expect(tag(page, "og:image")).toBe("https://meet.mkjems.dk/og-join.jpg");
+    expect(tag(page, "og:image:alt")).toMatch(/invited/);
+    expect(tag(page, "og:description")).toMatch(/invited/);
+    expect(page).toContain("<title>Join the call abcd-efgh – Meet</title>");
+    expect(page).not.toContain('rel="canonical"');
   });
 });
